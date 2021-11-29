@@ -1,0 +1,21 @@
+[package]
+name = "tracing-fluent-assertions"
+version = "0.1.0"
+authors = ["Toby Lawrence <toby@nuclearfurnace.com>"]
+edition = "2018"
+
+license = "MIT"
+
+description = "A fluent assertions framework for tracing."
+homepage = "https://github.com/tobz/tracing-fluent-assertions"
+repository = "https://github.com/tobz/tracing-fluent-assertions"
+documentation = "https://docs.rs/tracing-fluent-assertions"
+readme = "README.md"
+
+categories = ["development-tools::debugging", "development-tools::testing"]
+keywords = ["tracing", "fluent-assertions", "testing", "async"]
+
+[dependencies]
+tracing = { version = "0.1.29", default-features = false }
+tracing-core = { version = "0.1.21", default-features = false }
+tracing-subscriber = { version = "0.2.25", default-features = false }
