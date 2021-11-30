@@ -10,12 +10,17 @@ enum FieldCriterion {
 pub struct SpanMatcher {
     name: Option<String>,
     target: Option<String>,
+    parent_name: Option<String>,
     fields: Vec<FieldCriterion>,
 }
 
 impl SpanMatcher {
     pub fn set_name(&mut self, name: String) {
         self.name = Some(name);
+    }
+
+    pub fn set_parent_name(&mut self, name: String) {
+        self.parent_name = Some(name);
     }
 
     pub fn set_target(&mut self, target: String) {
@@ -38,6 +43,23 @@ impl SpanMatcher {
 
         if let Some(target) = self.target.as_ref() {
             if span.metadata().target() != target {
+                return false;
+            }
+        }
+
+        if let Some(name) = self.parent_name.as_ref() {
+            let mut has_matching_parent = false;
+            let mut parent = span.parent();
+            while let Some(span) = parent {
+                if span.name() == name {
+                    has_matching_parent = true;
+                    break;
+                }
+
+                parent = span.parent();
+            }
+
+            if !has_matching_parent {
                 return false;
             }
         }

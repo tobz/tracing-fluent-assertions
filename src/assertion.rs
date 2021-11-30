@@ -143,8 +143,9 @@ pub struct AssertionBuilder<S> {
 impl AssertionBuilder<NoMatcher> {
     /// Sets the name of the span to match.
     ///
-    /// All span matchers, which includes [`with_name`], [`with_target`], and [`with_span_field`],
-    /// are additive, which means a span must match all of them to match the assertion overall.
+    /// All span matchers, which includes [`with_name`], [`with_target`], [`with_parent_name`], and
+    /// [`with_span_field`], are additive, which means a span must match all of them to match the
+    /// assertion overall.
     pub fn with_name<S>(mut self, name: S) -> AssertionBuilder<NoCriteria>
     where
         S: Into<String>,
@@ -162,8 +163,9 @@ impl AssertionBuilder<NoMatcher> {
 
     /// Sets the target of the span to match.
     ///
-    /// All span matchers, which includes [`with_name`], [`with_target`], and [`with_span_field`],
-    /// are additive, which means a span must match all of them to match the assertion overall.
+    /// All span matchers, which includes [`with_name`], [`with_target`], [`with_parent_name`], and
+    /// [`with_span_field`], are additive, which means a span must match all of them to match the
+    /// assertion overall.
     pub fn with_target<S>(mut self, target: S) -> AssertionBuilder<NoCriteria>
     where
         S: Into<String>,
@@ -183,8 +185,9 @@ impl AssertionBuilder<NoMatcher> {
 impl AssertionBuilder<NoCriteria> {
     /// Sets the name of the span to match.
     ///
-    /// All span matchers, which includes [`with_name`], [`with_target`], and [`with_span_field`],
-    /// are additive, which means a span must match all of them to match the assertion overall.
+    /// All span matchers, which includes [`with_name`], [`with_target`], [`with_parent_name`], and
+    /// [`with_span_field`], are additive, which means a span must match all of them to match the
+    /// assertion overall.
     pub fn with_name<S>(mut self, name: S) -> AssertionBuilder<NoCriteria>
     where
         S: Into<String>,
@@ -202,14 +205,38 @@ impl AssertionBuilder<NoCriteria> {
 
     /// Sets the target of the span to match.
     ///
-    /// All span matchers, which includes [`with_name`], [`with_target`], and [`with_span_field`],
-    /// are additive, which means a span must match all of them to match the assertion overall.
+    /// All span matchers, which includes [`with_name`], [`with_target`], [`with_parent_name`], and
+    /// [`with_span_field`], are additive, which means a span must match all of them to match the
+    /// assertion overall.
     pub fn with_target<S>(mut self, target: S) -> AssertionBuilder<NoCriteria>
     where
         S: Into<String>,
     {
         let matcher = self.matcher.get_or_insert_with(SpanMatcher::default);
         matcher.set_target(target.into());
+
+        AssertionBuilder {
+            state: self.state,
+            matcher: self.matcher,
+            criteria: self.criteria,
+            _builder_state: PhantomData,
+        }
+    }
+
+    /// Sets the name of a parent span to match.
+    ///
+    /// The span must have at least one parent span within its entire lineage that matches the given
+    /// name.
+    ///
+    /// All span matchers, which includes [`with_name`], [`with_target`], [`with_parent_name`], and
+    /// [`with_span_field`], are additive, which means a span must match all of them to match the
+    /// assertion overall.
+    pub fn with_parent_name<S>(mut self, name: S) -> AssertionBuilder<NoCriteria>
+    where
+        S: Into<String>,
+    {
+        let matcher = self.matcher.get_or_insert_with(SpanMatcher::default);
+        matcher.set_parent_name(name.into());
 
         AssertionBuilder {
             state: self.state,
