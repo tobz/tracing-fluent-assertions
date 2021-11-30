@@ -83,7 +83,7 @@ fn main() {
     }
 
     // Once we break out of that loop, we know that we have entered the
-    // acquire_shaving_shears` span at least once.  This example is a bit
+    // `acquire_shaving_shears` span at least once.  This example is a bit
     // contrived, but a more useful scenario (albeit with more code required
     // to demonstrate) would be to figure out that one asynchronous task is
     // finally awaiting a specific resource, when it has to await other resources
