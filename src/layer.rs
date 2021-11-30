@@ -5,8 +5,8 @@ use tracing_subscriber::{layer::Context, registry::LookupSpan, Layer};
 
 use crate::{state::State, AssertionRegistry};
 
-/// [`AssertionsLayer`] is a [`tracing_subscriber::Layer`] that tracks the lifecycle changes of
-/// certain spans based on span matchers which define which spans to track.
+/// A [`tracing_subscriber::Layer`] that tracks the lifecycle changes of certain spans based on span
+/// matchers which define which spans to track.
 pub struct AssertionsLayer<S> {
     state: Arc<State>,
     _subscriber: PhantomData<fn(S)>,

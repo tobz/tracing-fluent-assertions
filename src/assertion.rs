@@ -71,7 +71,7 @@ impl Assertion {
     /// Uses the "assert" macros from the standard library, so criterion which have not been met
     /// will cause a panic, similar to using the "assert" macros directly.
     ///
-    /// For a fallible assertion that can be called over and over without panicking, `try_assert`
+    /// For a fallible assertion that can be called over and over without panicking, [`try_assert`]
     /// can be used instead.
     pub fn assert(&self) {
         for criterion in &self.criteria {
@@ -84,7 +84,7 @@ impl Assertion {
     /// If any of the criteria have not yet been met, `false` will be returned.  Otherwise, `true`
     /// will be returned.
     ///
-    /// If assertions should end your test immediately, `assert` can be used instead.
+    /// If assertions should end your test immediately, [`assert`] can be used instead.
     pub fn try_assert(&self) -> bool {
         for criterion in &self.criteria {
             if !criterion.try_assert(&self.state) {
@@ -96,7 +96,7 @@ impl Assertion {
     }
 }
 
-/// An `AssertionBuilder` which does not yet have a span matcher.
+/// An [`AssertionBuilder`] which does not yet have a span matcher.
 ///
 /// A matcher consists of either a span name, or the target of a span itself, or potentially both.
 /// A span target refers to the `tracing` parlance, where "target" refers to the module path that a
@@ -108,15 +108,16 @@ pub struct NoMatcher {
     _p: PhantomData<()>,
 }
 
-/// An `AssertionBuilder` which has a valid span target but does not yet have any assertion criteria.
+/// An [`AssertionBuilder`] which has a valid span matcher but does not yet have any assertion
+/// criteria.
 ///
-/// Assertion criteria are the actual matchers, such as "this span must have been entered at least
-/// once" or "this span must have been created at least N times".
+/// Assertion criteria are the actual behavioral matchers, such as "this span must have been entered
+/// at least once" or "this span must have been created at least N times".
 pub struct NoCriteria {
     _p: PhantomData<()>,
 }
 
-/// An `AssertionBuilder` which has a valid span target and at least one assertion criterion.
+/// An [`AssertionBuilder`] which has a valid span matcher and at least one assertion criterion.
 pub struct Constrained {
     _p: PhantomData<()>,
 }
