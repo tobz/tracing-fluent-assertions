@@ -1,6 +1,6 @@
 [package]
 name = "tracing-fluent-assertions"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Toby Lawrence <toby@nuclearfurnace.com>"]
 edition = "2018"
 
@@ -16,6 +16,6 @@ categories = ["development-tools::debugging", "development-tools::testing"]
 keywords = ["tracing", "fluent-assertions", "testing", "async"]
 
 [dependencies]
-tracing = { version = "0.1.29", default-features = false }
-tracing-core = { version = "0.1.21", default-features = false }
-tracing-subscriber = { version = "0.2.25", default-features = false }
+tracing = { version = "0.1", default-features = false }
+tracing-core = { version = "0.1", default-features = false }
+tracing-subscriber = { version = "0.2", default-features = false }
