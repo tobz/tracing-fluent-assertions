@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+### Added
+- `AssertionRegistry` can now be cloned.
+
 ## [0.1.2] - 2021-11-29
 ### Added
 - Ability to require a parent span (any parent, not direct predecessor) to match a specific name.

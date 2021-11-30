@@ -431,7 +431,7 @@ impl AssertionBuilder<Constrained> {
 }
 
 /// Creates and stores all constructed [`Assertion`]s.
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct AssertionRegistry {
     state: Arc<State>,
 }
