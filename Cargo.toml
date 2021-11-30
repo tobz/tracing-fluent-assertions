@@ -6,7 +6,7 @@ edition = "2018"
 
 license = "MIT"
 
-description = "A fluent assertions framework for tracing."
+description = "An fluent assertions framework for tracing."
 homepage = "https://github.com/tobz/tracing-fluent-assertions"
 repository = "https://github.com/tobz/tracing-fluent-assertions"
 documentation = "https://docs.rs/tracing-fluent-assertions"
