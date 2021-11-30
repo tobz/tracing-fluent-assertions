@@ -5,18 +5,18 @@ use tracing_subscriber::{layer::Context, registry::LookupSpan, Layer};
 
 use crate::{state::State, AssertionRegistry};
 
-/// [`FluentAssertionsLayer`] is a [`tracing_subscriber::Layer`] that tracks assertions as spans
-/// transition through the various states of their lifecycle.
-pub struct FluentAssertionsLayer<S> {
+/// [`AssertionsLayer`] is a [`tracing_subscriber::Layer`] that tracks the lifecycle changes of
+/// certain spans based on span matchers which define which spans to track.
+pub struct AssertionsLayer<S> {
     state: Arc<State>,
     _subscriber: PhantomData<fn(S)>,
 }
 
-impl<S> FluentAssertionsLayer<S>
+impl<S> AssertionsLayer<S>
 where
     S: Subscriber,
 {
-    /// Create a new `FluentAssertionsLayer`.
+    /// Create a new [`AssertionsLayer`] tied to the given [`AssertionRegistry`].
     pub fn new(controller: &AssertionRegistry) -> Self {
         Self {
             state: Arc::clone(controller.state()),
@@ -25,7 +25,7 @@ where
     }
 }
 
-impl<S> Layer<S> for FluentAssertionsLayer<S>
+impl<S> Layer<S> for AssertionsLayer<S>
 where
     S: Subscriber + for<'a> LookupSpan<'a>,
 {

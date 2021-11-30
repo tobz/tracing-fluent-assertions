@@ -136,7 +136,7 @@ pub struct AssertionBuilder<S> {
     state: Arc<State>,
     matcher: Option<SpanMatcher>,
     criteria: Vec<AssertionCriterion>,
-    _s: PhantomData<S>,
+    _builder_state: PhantomData<fn(S)>,
 }
 
 impl AssertionBuilder<NoMatcher> {
@@ -155,7 +155,7 @@ impl AssertionBuilder<NoMatcher> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 
@@ -174,7 +174,7 @@ impl AssertionBuilder<NoMatcher> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 }
@@ -195,7 +195,7 @@ impl AssertionBuilder<NoCriteria> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 
@@ -214,7 +214,7 @@ impl AssertionBuilder<NoCriteria> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 
@@ -236,7 +236,7 @@ impl AssertionBuilder<NoCriteria> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 
@@ -248,7 +248,7 @@ impl AssertionBuilder<NoCriteria> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 
@@ -260,7 +260,7 @@ impl AssertionBuilder<NoCriteria> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 
@@ -272,7 +272,7 @@ impl AssertionBuilder<NoCriteria> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 
@@ -284,7 +284,7 @@ impl AssertionBuilder<NoCriteria> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 
@@ -296,7 +296,7 @@ impl AssertionBuilder<NoCriteria> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 
@@ -308,7 +308,7 @@ impl AssertionBuilder<NoCriteria> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 
@@ -320,7 +320,7 @@ impl AssertionBuilder<NoCriteria> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 
@@ -332,7 +332,7 @@ impl AssertionBuilder<NoCriteria> {
             state: self.state,
             matcher: self.matcher,
             criteria: self.criteria,
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 }
@@ -419,7 +419,7 @@ impl AssertionRegistry {
             state: Arc::clone(&self.state),
             matcher: None,
             criteria: Vec::new(),
-            _s: PhantomData,
+            _builder_state: PhantomData,
         }
     }
 }
