@@ -66,7 +66,7 @@ fn main() {
     // An advanced usage of assertions can be to figure out when a span
     // has finally been entered.  This can be useful for ascertaining when
     // an asynchronous function has made it through other await points and
-    // now waiting at a piece of code that we control, with its own span.
+    // is now waiting at a piece of code that we control, with its own span.
     //
     // For this, we can use the fallible `try_assert`, which won't panic
     // if the assertion criteria has yet to be entirely met:
