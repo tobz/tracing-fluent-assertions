@@ -11,10 +11,18 @@ enum AssertionCriterion {
     WasEntered,
     WasExited,
     WasClosed,
-    CreatedTimes(usize),
-    EnteredTimes(usize),
-    ExitedTimes(usize),
-    ClosedTimes(usize),
+    WasNotCreated,
+    WasNotEntered,
+    WasNotExited,
+    WasNotClosed,
+    CreatedExactly(usize),
+    EnteredExactly(usize),
+    ExitedExactly(usize),
+    ClosedExactly(usize),
+    CreatedAtLeast(usize),
+    EnteredAtLeast(usize),
+    ExitedAtLeast(usize),
+    ClosedAtLeast(usize),
 }
 
 impl AssertionCriterion {
@@ -24,10 +32,18 @@ impl AssertionCriterion {
             AssertionCriterion::WasEntered => assert!(state.num_entered() != 0),
             AssertionCriterion::WasExited => assert!(state.num_exited() != 0),
             AssertionCriterion::WasClosed => assert!(state.num_closed() != 0),
-            AssertionCriterion::CreatedTimes(times) => assert_eq!(state.num_created(), *times),
-            AssertionCriterion::EnteredTimes(times) => assert_eq!(state.num_entered(), *times),
-            AssertionCriterion::ExitedTimes(times) => assert_eq!(state.num_exited(), *times),
-            AssertionCriterion::ClosedTimes(times) => assert_eq!(state.num_closed(), *times),
+            AssertionCriterion::WasNotCreated => assert_eq!(0, state.num_created()),
+            AssertionCriterion::WasNotEntered => assert_eq!(0, state.num_entered()),
+            AssertionCriterion::WasNotExited => assert_eq!(0, state.num_exited()),
+            AssertionCriterion::WasNotClosed => assert_eq!(0, state.num_closed()),
+            AssertionCriterion::CreatedExactly(times) => assert_eq!(state.num_created(), *times),
+            AssertionCriterion::EnteredExactly(times) => assert_eq!(state.num_entered(), *times),
+            AssertionCriterion::ExitedExactly(times) => assert_eq!(state.num_exited(), *times),
+            AssertionCriterion::ClosedExactly(times) => assert_eq!(state.num_closed(), *times),
+            AssertionCriterion::CreatedAtLeast(times) => assert!(state.num_created() >= *times),
+            AssertionCriterion::EnteredAtLeast(times) => assert!(state.num_entered() >= *times),
+            AssertionCriterion::ExitedAtLeast(times) => assert!(state.num_exited() >= *times),
+            AssertionCriterion::ClosedAtLeast(times) => assert!(state.num_closed() >= *times),
         }
     }
 
@@ -37,10 +53,18 @@ impl AssertionCriterion {
             AssertionCriterion::WasEntered => state.num_entered() != 0,
             AssertionCriterion::WasExited => state.num_exited() != 0,
             AssertionCriterion::WasClosed => state.num_closed() != 0,
-            AssertionCriterion::CreatedTimes(times) => state.num_created() == *times,
-            AssertionCriterion::EnteredTimes(times) => state.num_entered() == *times,
-            AssertionCriterion::ExitedTimes(times) => state.num_exited() == *times,
-            AssertionCriterion::ClosedTimes(times) => state.num_closed() == *times,
+            AssertionCriterion::WasNotCreated => state.num_created() == 0,
+            AssertionCriterion::WasNotEntered => state.num_entered() == 0,
+            AssertionCriterion::WasNotExited => state.num_exited() == 0,
+            AssertionCriterion::WasNotClosed => state.num_closed() == 0,
+            AssertionCriterion::CreatedExactly(times) => state.num_created() == *times,
+            AssertionCriterion::EnteredExactly(times) => state.num_entered() == *times,
+            AssertionCriterion::ExitedExactly(times) => state.num_exited() == *times,
+            AssertionCriterion::ClosedExactly(times) => state.num_closed() == *times,
+            AssertionCriterion::CreatedAtLeast(times) => state.num_created() >= *times,
+            AssertionCriterion::EnteredAtLeast(times) => state.num_entered() >= *times,
+            AssertionCriterion::ExitedAtLeast(times) => state.num_exited() >= *times,
+            AssertionCriterion::ClosedAtLeast(times) => state.num_closed() >= *times,
         }
     }
 }
@@ -316,9 +340,105 @@ impl AssertionBuilder<NoCriteria> {
         }
     }
 
+    /// Asserts that a matching span was not created.
+    pub fn was_not_created(mut self) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::WasNotCreated);
+
+        AssertionBuilder {
+            state: self.state,
+            matcher: self.matcher,
+            criteria: self.criteria,
+            _builder_state: PhantomData,
+        }
+    }
+
+    /// Asserts that a matching span was not entered.
+    pub fn was_not_entered(mut self) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::WasNotEntered);
+
+        AssertionBuilder {
+            state: self.state,
+            matcher: self.matcher,
+            criteria: self.criteria,
+            _builder_state: PhantomData,
+        }
+    }
+
+    /// Asserts that a matching span was not exited.
+    pub fn was_not_exited(mut self) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::WasNotExited);
+
+        AssertionBuilder {
+            state: self.state,
+            matcher: self.matcher,
+            criteria: self.criteria,
+            _builder_state: PhantomData,
+        }
+    }
+
+    /// Asserts that a matching span was not closed.
+    pub fn was_not_closed(mut self) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::WasNotClosed);
+
+        AssertionBuilder {
+            state: self.state,
+            matcher: self.matcher,
+            criteria: self.criteria,
+            _builder_state: PhantomData,
+        }
+    }
+
+    /// Asserts that a matching span was created exactly `n` times.
+    pub fn was_created_exactly(mut self, n: usize) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::CreatedExactly(n));
+
+        AssertionBuilder {
+            state: self.state,
+            matcher: self.matcher,
+            criteria: self.criteria,
+            _builder_state: PhantomData,
+        }
+    }
+
+    /// Asserts that a matching span was entered exactly `n` times.
+    pub fn was_entered_exactly(mut self, n: usize) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::EnteredExactly(n));
+
+        AssertionBuilder {
+            state: self.state,
+            matcher: self.matcher,
+            criteria: self.criteria,
+            _builder_state: PhantomData,
+        }
+    }
+
+    /// Asserts that a matching span was exited exactly `n` times.
+    pub fn was_exited_exactly(mut self, n: usize) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::ExitedExactly(n));
+
+        AssertionBuilder {
+            state: self.state,
+            matcher: self.matcher,
+            criteria: self.criteria,
+            _builder_state: PhantomData,
+        }
+    }
+
+    /// Asserts that a matching span was closed exactly `n` times.
+    pub fn was_closed_exactly(mut self, n: usize) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::ClosedExactly(n));
+
+        AssertionBuilder {
+            state: self.state,
+            matcher: self.matcher,
+            criteria: self.criteria,
+            _builder_state: PhantomData,
+        }
+    }
+
     /// Asserts that a matching span was created at least `n` times.
-    pub fn was_created_many(mut self, n: usize) -> AssertionBuilder<Constrained> {
-        self.criteria.push(AssertionCriterion::CreatedTimes(n));
+    pub fn was_created_at_least(mut self, n: usize) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::CreatedAtLeast(n));
 
         AssertionBuilder {
             state: self.state,
@@ -329,8 +449,8 @@ impl AssertionBuilder<NoCriteria> {
     }
 
     /// Asserts that a matching span was entered at least `n` times.
-    pub fn was_entered_many(mut self, n: usize) -> AssertionBuilder<Constrained> {
-        self.criteria.push(AssertionCriterion::EnteredTimes(n));
+    pub fn was_entered_at_least(mut self, n: usize) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::EnteredAtLeast(n));
 
         AssertionBuilder {
             state: self.state,
@@ -341,8 +461,8 @@ impl AssertionBuilder<NoCriteria> {
     }
 
     /// Asserts that a matching span was exited at least `n` times.
-    pub fn was_exited_many(mut self, n: usize) -> AssertionBuilder<Constrained> {
-        self.criteria.push(AssertionCriterion::ExitedTimes(n));
+    pub fn was_exited_at_least(mut self, n: usize) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::ExitedAtLeast(n));
 
         AssertionBuilder {
             state: self.state,
@@ -353,8 +473,8 @@ impl AssertionBuilder<NoCriteria> {
     }
 
     /// Asserts that a matching span was closed at least `n` times.
-    pub fn was_closed_many(mut self, n: usize) -> AssertionBuilder<Constrained> {
-        self.criteria.push(AssertionCriterion::ClosedTimes(n));
+    pub fn was_closed_at_least(mut self, n: usize) -> AssertionBuilder<Constrained> {
+        self.criteria.push(AssertionCriterion::ClosedAtLeast(n));
 
         AssertionBuilder {
             state: self.state,
@@ -390,27 +510,75 @@ impl AssertionBuilder<Constrained> {
         self
     }
 
+    /// Asserts that a matching span was not created.
+    pub fn was_not_created(mut self) -> Self {
+        self.criteria.push(AssertionCriterion::WasNotCreated);
+        self
+    }
+
+    /// Asserts that a matching span was not entered.
+    pub fn was_not_entered(mut self) -> Self {
+        self.criteria.push(AssertionCriterion::WasNotEntered);
+        self
+    }
+
+    /// Asserts that a matching span was not exited.
+    pub fn was_not_exited(mut self) -> Self {
+        self.criteria.push(AssertionCriterion::WasNotExited);
+        self
+    }
+
+    /// Asserts that a matching span was not closed.
+    pub fn was_not_closed(mut self) -> Self {
+        self.criteria.push(AssertionCriterion::WasNotClosed);
+        self
+    }
+
+    /// Asserts that a matching span was created exactly `n` times.
+    pub fn was_created_exactly(mut self, n: usize) -> Self {
+        self.criteria.push(AssertionCriterion::CreatedExactly(n));
+        self
+    }
+
+    /// Asserts that a matching span was entered exactly `n` times.
+    pub fn was_entered_exactly(mut self, n: usize) -> Self {
+        self.criteria.push(AssertionCriterion::EnteredExactly(n));
+        self
+    }
+
+    /// Asserts that a matching span was exited exactly `n` times.
+    pub fn was_exited_exactly(mut self, n: usize) -> Self {
+        self.criteria.push(AssertionCriterion::ExitedExactly(n));
+        self
+    }
+
+    /// Asserts that a matching span was closed exactly `n` times.
+    pub fn was_closed_exactly(mut self, n: usize) -> Self {
+        self.criteria.push(AssertionCriterion::ClosedExactly(n));
+        self
+    }
+
     /// Asserts that a matching span was created at least `n` times.
-    pub fn was_created_many(mut self, n: usize) -> Self {
-        self.criteria.push(AssertionCriterion::CreatedTimes(n));
+    pub fn was_created_at_least(mut self, n: usize) -> Self {
+        self.criteria.push(AssertionCriterion::CreatedAtLeast(n));
         self
     }
 
     /// Asserts that a matching span was entered at least `n` times.
-    pub fn was_entered_many(mut self, n: usize) -> Self {
-        self.criteria.push(AssertionCriterion::EnteredTimes(n));
+    pub fn was_entered_at_least(mut self, n: usize) -> Self {
+        self.criteria.push(AssertionCriterion::EnteredAtLeast(n));
         self
     }
 
     /// Asserts that a matching span was exited at least `n` times.
-    pub fn was_exited_many(mut self, n: usize) -> Self {
-        self.criteria.push(AssertionCriterion::ExitedTimes(n));
+    pub fn was_exited_at_least(mut self, n: usize) -> Self {
+        self.criteria.push(AssertionCriterion::ExitedAtLeast(n));
         self
     }
 
     /// Asserts that a matching span was closed at least `n` times.
-    pub fn was_closed_many(mut self, n: usize) -> Self {
-        self.criteria.push(AssertionCriterion::ClosedTimes(n));
+    pub fn was_closed_at_least(mut self, n: usize) -> Self {
+        self.criteria.push(AssertionCriterion::ClosedAtLeast(n));
         self
     }
 

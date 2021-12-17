@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+### Added
+- New assertion family: `was_not_*`.  Now you can assert that a given lifecycle event did not occur i.e. a span
+  was not entered, or hasn't yet closed, etc.
+- New assertion family: `was_*_exactly`.  These assertions replace `was_*_many`, which were named
+  as if they could potentially be either "at least" or "exactly", while the docs said explicitly
+  that they were "at least", but in reality, the checks were "exactly."  Now we have each group
+  respectively with better naming.
+
+### Changed
+- Renamed the `was_*_many` assertion family to `was_*_at_least` to better reflect their "at
+  least" nature, and to match the naming scheme of the newly-added `was_*_exactly`
+  assertion family.
+
 ## [0.1.3] - 2021-11-30
 
 ### Added
