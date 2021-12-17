@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+## [0.2.0] - 2021-12-16
+
 ### Added
 - New assertion family: `was_not_*`.  Now you can assert that a given lifecycle event did not occur i.e. a span
   was not entered, or hasn't yet closed, etc.
