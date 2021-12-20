@@ -29,7 +29,7 @@ impl<S> Layer<S> for AssertionsLayer<S>
 where
     S: Subscriber + for<'a> LookupSpan<'a>,
 {
-    fn new_span(&self, _attributes: &Attributes<'_>, id: &Id, ctx: Context<'_, S>) {
+    fn on_new_span(&self, _attributes: &Attributes<'_>, id: &Id, ctx: Context<'_, S>) {
         let span = ctx.span(id).expect("span must already exist!");
         if let Some(entry) = self.state.get_entry(span) {
             entry.track_created();
