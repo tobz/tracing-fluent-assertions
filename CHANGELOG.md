@@ -9,6 +9,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased] - ReleaseDate
 
+## [0.3.0] - 2022-02-09
+
 ### Changed
 
 - Updated to `tracing-subscriber@v0.3`.
