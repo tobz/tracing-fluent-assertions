@@ -85,7 +85,9 @@ impl AssertionCriterion {
 /// a particular codeflow is being exercised, but not assert _how_ it's being exercised -- then only
 /// specifying the span target might suffice.
 pub struct Assertion {
-    state: Arc<EntryState>,
+    state: Arc<State>,
+    entry_state: Arc<EntryState>,
+    matcher: SpanMatcher,
     criteria: Vec<AssertionCriterion>,
 }
 
@@ -99,7 +101,7 @@ impl Assertion {
     /// can be used instead.
     pub fn assert(&self) {
         for criterion in &self.criteria {
-            criterion.assert(&self.state);
+            criterion.assert(&self.entry_state);
         }
     }
 
@@ -111,12 +113,18 @@ impl Assertion {
     /// If assertions should end your test immediately, [`assert`] can be used instead.
     pub fn try_assert(&self) -> bool {
         for criterion in &self.criteria {
-            if !criterion.try_assert(&self.state) {
+            if !criterion.try_assert(&self.entry_state) {
                 return false;
             }
         }
 
         true
+    }
+}
+
+impl Drop for Assertion {
+    fn drop(&mut self) {
+        self.state.remove_entry(&self.matcher);
     }
 }
 
@@ -590,9 +598,11 @@ impl AssertionBuilder<Constrained> {
             .matcher
             .take()
             .expect("matcher must be present at this point");
-        let state = self.state.create_entry(matcher);
+        let entry_state = self.state.create_entry(matcher.clone());
         Assertion {
-            state,
+            state: Arc::clone(&self.state),
+            entry_state,
+            matcher,
             criteria: self.criteria,
         }
     }

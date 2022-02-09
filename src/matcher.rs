@@ -1,12 +1,12 @@
 use tracing::Subscriber;
 use tracing_subscriber::registry::{LookupSpan, SpanRef};
 
-#[derive(Eq, Hash, PartialEq)]
+#[derive(Clone, Eq, Hash, PartialEq)]
 enum FieldCriterion {
     Exists(String),
 }
 
-#[derive(Default, Eq, Hash, PartialEq)]
+#[derive(Clone, Default, Eq, Hash, PartialEq)]
 pub struct SpanMatcher {
     name: Option<String>,
     target: Option<String>,

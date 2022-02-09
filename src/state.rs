@@ -70,6 +70,14 @@ impl State {
         Arc::clone(entry)
     }
 
+    pub fn remove_entry(&self, matcher: &SpanMatcher) {
+        let mut entries = self
+            .entries
+            .lock()
+            .expect("i literally don't know what a poisoned thread is");
+        entries.remove(matcher);
+    }
+
     pub fn get_entry<S>(&self, span: SpanRef<'_, S>) -> Option<Arc<EntryState>>
     where
         S: Subscriber + for<'a> LookupSpan<'a>,
